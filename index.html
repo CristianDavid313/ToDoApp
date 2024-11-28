@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ToDoApp</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.1/css/all.min.css" integrity="sha512-5Hs3dF2AEPkpNAR7UiOHba+lRSJNeM2ECkwxUIxC1Q/FLycGTbNapWXB4tP889k5T5Ju8fs4b1P5z/iB4nMfSQ==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+    <header class="header">
+        <h1>ToDoApp</h1>
+
+        <select name="filter" id="filter">
+            <option value="todas">Todas las tareas</option>
+            <option value="pendiente">Pendientes</option>
+            <option value="completada">Completadas</option>
+        </select>
+    </header>
+
+    <main class="main">
+        <div id="form">
+            <form>
+                <input class="entrada" type="text" placeholder="Añade una tarea.">
+
+                <button class="enviar" type="submit">Enviar</button>
+            </form>
+        </div>
+
+        <div id="datos">
+            <ul class="lista">
+                <!--Contenido-->
+            </ul>
+        </div>
+    </main>
+
+    <footer class="footer">
+        Cristian © 2024
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>
