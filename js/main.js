@@ -67,26 +67,28 @@ function addAgenda(event) {
 }
 
 function editarTarea(tarea) {
-  // Obtener el texto de la tarea sin los botones
-  const textoActual = tarea.childNodes[0].nodeValue.trim();
+  // Obtener el texto actual de la tarea
+  const textoActual = tarea.querySelector("p").innerText.trim();
 
-  // Crear un input para editar
+  // Crear un input para editar el texto
   const inputEdicion = document.createElement("input");
   inputEdicion.type = "text";
   inputEdicion.value = textoActual;
   inputEdicion.classList.add("edit-input");
 
-  // Botón para guardar
+  // Crear un botón para guardar los cambios
   const guardar = document.createElement("button");
   guardar.innerHTML = '<i class="fas fa-save"></i>';
   guardar.classList.add("save-btn");
 
-  // Reemplazar el contenido de la tarea con el input y el botón guardar
-  tarea.innerHTML = ""; // Limpiar el contenido actual
+  // Limpiar el contenido de la tarea para reemplazarlo por el input y el botón de guardar
+  tarea.innerHTML = ""; // Limpiar el contenido actual de la tarea
+
+  // Añadir el input de edición y el botón guardar
   tarea.appendChild(inputEdicion);
   tarea.appendChild(guardar);
 
-  // Guardar cambios al hacer clic en el botón guardar
+  // Guardar los cambios al hacer clic en el botón guardar
   guardar.addEventListener("click", () => {
     const nuevoTexto = inputEdicion.value.trim();
 
@@ -95,20 +97,18 @@ function editarTarea(tarea) {
       return;
     }
 
-    // Actualizar localStorage
+    // Actualizar el texto en LocalStorage
     actualizarTextoLocalStorage(textoActual, nuevoTexto);
 
-    // Restaurar el contenido original con el texto actualizado
-    tarea.innerHTML = nuevoTexto;
-    tarea.classList.remove("completed"); // Opcional: quitar completado
+    // Crear los elementos necesarios para la tarea actualizada
+    const pNuevoTexto = document.createElement("p");
+    pNuevoTexto.innerText = nuevoTexto;
 
-    // Volver a añadir los botones de acción
+    // Crear los botones para la tarea
     const checked = document.createElement("button");
     checked.innerHTML = '<i class="fas fa-check"></i>';
     checked.classList.add("check-btn");
-    checked.addEventListener("click", () =>
-      tarea.classList.toggle("completed")
-    );
+    checked.addEventListener("click", () => tarea.classList.toggle("completed"));
 
     const deleted = document.createElement("button");
     deleted.innerHTML = '<i class="fas fa-trash"></i>';
@@ -123,9 +123,12 @@ function editarTarea(tarea) {
     edit.classList.add("edit-btn");
     edit.addEventListener("click", () => editarTarea(tarea));
 
-    tarea.appendChild(checked);
-    tarea.appendChild(deleted);
-    tarea.appendChild(edit);
+    // Limpiar la tarea y añadir los elementos actualizados
+    tarea.innerHTML = "";  // Limpiar el contenido de la tarea
+    tarea.appendChild(checked);  // Botón de "check"
+    tarea.appendChild(pNuevoTexto);  // Texto de la tarea actualizado
+    tarea.appendChild(edit);  // Botón de "editar"
+    tarea.appendChild(deleted);  // Botón de "eliminar"
   });
 }
 
