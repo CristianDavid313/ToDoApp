@@ -151,7 +151,6 @@ function getAgenda() {
   datos.forEach((data) => {
     const newAgenda = document.createElement("li");
     newAgenda.classList.add("item");
-    if (data.completada) newAgenda.classList.add("completed");
 
     // Botón "check"
     const checked = document.createElement("button");
@@ -160,7 +159,35 @@ function getAgenda() {
       : '<i class="fa-regular fa-square"></i>';
     checked.classList.add("check-btn");
 
-    // Evento para alternar el estado de completado
+    // Crear una etiqueta <p> para contener el texto de la tarea
+    const taskText = document.createElement("p");
+    taskText.innerText = data.texto;
+
+    // Botón "edit"
+    const edit = document.createElement("button");
+    edit.innerHTML = '<i class="fas fa-edit"></i>';
+    edit.classList.add("edit-btn");
+    edit.addEventListener("click", () => editarTarea(newAgenda));
+
+    // Botón "delete"
+    const deleted = document.createElement("button");
+    deleted.innerHTML = '<i class="fas fa-trash"></i>';
+    deleted.classList.add("delete-btn");
+    deleted.addEventListener("click", () => {
+      eliminarDeLocalStorage(data.texto);
+      newAgenda.remove();
+    });
+
+    // Añadir los elementos al <li> en el orden solicitado
+    newAgenda.appendChild(checked); // Botón check
+    newAgenda.appendChild(taskText); // Texto de la tarea dentro de <p>
+    newAgenda.appendChild(edit); // Botón edit
+    newAgenda.appendChild(deleted); // Botón delete
+
+    // Si la tarea está completada, agregar la clase 'completed' al <li>
+    if (data.completada) newAgenda.classList.add("completed");
+
+    // Evento para alternar entre los estados e íconos del botón "check"
     checked.addEventListener("click", () => {
       newAgenda.classList.toggle("completed");
 
@@ -173,30 +200,6 @@ function getAgenda() {
         actualizarEstadoLocalStorage(data.texto, false); // Guardar estado como no completado
       }
     });
-
-    // Crear nodo de texto para la tarea
-    const textoTarea = document.createTextNode(data.texto);
-
-    // Botón "delete"
-    const deleted = document.createElement("button");
-    deleted.innerHTML = '<i class="fas fa-trash"></i>';
-    deleted.classList.add("delete-btn");
-    deleted.addEventListener("click", () => {
-      eliminarDeLocalStorage(data.texto);
-      newAgenda.remove();
-    });
-
-    // Botón "edit"
-    const edit = document.createElement("button");
-    edit.innerHTML = '<i class="fas fa-edit"></i>';
-    edit.classList.add("edit-btn");
-    edit.addEventListener("click", () => editarTarea(newAgenda));
-
-    // Añadir elementos al <li>
-    newAgenda.appendChild(checked);
-    newAgenda.appendChild(textoTarea);
-    newAgenda.appendChild(deleted);
-    newAgenda.appendChild(edit);
 
     // Agregar la tarea a la lista
     agendaLista.appendChild(newAgenda);
