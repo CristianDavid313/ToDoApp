@@ -19,16 +19,21 @@ function addAgenda(event) {
   }
 
   const newAgenda = document.createElement("li");
-  newAgenda.innerText = agendaEntrada.value;
   newAgenda.classList.add("item");
 
   // Botón "check"
   const checked = document.createElement("button");
-  checked.innerHTML = '<i class="fas fa-check"></i>';
+  checked.innerHTML = '<i class="fa-regular fa-square"></i>';
   checked.classList.add("check-btn");
-  checked.addEventListener("click", () =>
-    newAgenda.classList.toggle("completed")
-  );
+  checked.addEventListener("click", () => {
+    newAgenda.classList.toggle("completed");
+    checked.innerHTML = newAgenda.classList.contains("completed")
+      ? '<i class="fa-solid fa-check-square"></i>'
+      : '<i class="fa-regular fa-square"></i>';
+  });
+
+  // Crear nodo de texto para la tarea
+  const textoTarea = document.createTextNode(agendaEntrada.value);
 
   // Botón "delete"
   const deleted = document.createElement("button");
@@ -45,13 +50,19 @@ function addAgenda(event) {
   edit.classList.add("edit-btn");
   edit.addEventListener("click", () => editarTarea(newAgenda));
 
+  // Añadir elementos al <li>
   newAgenda.appendChild(checked);
+  newAgenda.appendChild(textoTarea);
   newAgenda.appendChild(deleted);
   newAgenda.appendChild(edit);
 
+  // Agregar tarea a la lista
   agendaLista.appendChild(newAgenda);
+
+  // Guardar en localStorage
   almacenamientoLocal(agendaEntrada.value);
 
+  // Limpiar entrada
   agendaEntrada.value = "";
 }
 
@@ -139,18 +150,32 @@ function getAgenda() {
 
   datos.forEach((data) => {
     const newAgenda = document.createElement("li");
-    newAgenda.innerText = data.texto;
     newAgenda.classList.add("item");
     if (data.completada) newAgenda.classList.add("completed");
 
     // Botón "check"
     const checked = document.createElement("button");
-    checked.innerHTML = '<i class="fas fa-check"></i>';
+    checked.innerHTML = data.completada
+      ? '<i class="fa-solid fa-check-square"></i>'
+      : '<i class="fa-regular fa-square"></i>';
     checked.classList.add("check-btn");
+
+    // Evento para alternar el estado de completado
     checked.addEventListener("click", () => {
       newAgenda.classList.toggle("completed");
-      actualizarEstadoLocalStorage(data.texto);
+
+      // Cambiar ícono según el estado de la tarea
+      if (newAgenda.classList.contains("completed")) {
+        checked.innerHTML = '<i class="fa-solid fa-check-square"></i>';
+        actualizarEstadoLocalStorage(data.texto, true); // Guardar estado como completado
+      } else {
+        checked.innerHTML = '<i class="fa-regular fa-square"></i>';
+        actualizarEstadoLocalStorage(data.texto, false); // Guardar estado como no completado
+      }
     });
+
+    // Crear nodo de texto para la tarea
+    const textoTarea = document.createTextNode(data.texto);
 
     // Botón "delete"
     const deleted = document.createElement("button");
@@ -167,8 +192,9 @@ function getAgenda() {
     edit.classList.add("edit-btn");
     edit.addEventListener("click", () => editarTarea(newAgenda));
 
-    // Añadir botones al elemento de la tarea
+    // Añadir elementos al <li>
     newAgenda.appendChild(checked);
+    newAgenda.appendChild(textoTarea);
     newAgenda.appendChild(deleted);
     newAgenda.appendChild(edit);
 
@@ -177,12 +203,12 @@ function getAgenda() {
   });
 }
 
-function actualizarEstadoLocalStorage(texto) {
-  let datos = JSON.parse(localStorage.getItem("datos"));
+function actualizarEstadoLocalStorage(texto, estadoCompletado) {
+  let datos = JSON.parse(localStorage.getItem("datos")) || [];
 
   datos = datos.map((item) => {
     if (item.texto === texto) {
-      return { ...item, completada: !item.completada };
+      return { ...item, completada: estadoCompletado };
     }
     return item;
   });
