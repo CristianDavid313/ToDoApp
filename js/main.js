@@ -21,19 +21,23 @@ function addAgenda(event) {
   const newAgenda = document.createElement("li");
   newAgenda.classList.add("item");
 
+  // Crear el texto de la tarea
+  const taskText = document.createElement("p");
+  taskText.innerText = agendaEntrada.value;
+
   // Botón "check"
   const checked = document.createElement("button");
   checked.innerHTML = '<i class="fa-regular fa-square"></i>';
   checked.classList.add("check-btn");
-  checked.addEventListener("click", () => {
-    newAgenda.classList.toggle("completed");
-    checked.innerHTML = newAgenda.classList.contains("completed")
-      ? '<i class="fa-solid fa-check-square"></i>'
-      : '<i class="fa-regular fa-square"></i>';
-  });
+  checked.addEventListener("click", () =>
+    newAgenda.classList.toggle("completed")
+  );
 
-  // Crear nodo de texto para la tarea
-  const textoTarea = document.createTextNode(agendaEntrada.value);
+  // Botón "edit"
+  const edit = document.createElement("button");
+  edit.innerHTML = '<i class="fas fa-edit"></i>';
+  edit.classList.add("edit-btn");
+  edit.addEventListener("click", () => editarTarea(newAgenda));
 
   // Botón "delete"
   const deleted = document.createElement("button");
@@ -44,25 +48,21 @@ function addAgenda(event) {
     newAgenda.remove();
   });
 
-  // Botón "edit"
-  const edit = document.createElement("button");
-  edit.innerHTML = '<i class="fas fa-edit"></i>';
-  edit.classList.add("edit-btn");
-  edit.addEventListener("click", () => editarTarea(newAgenda));
-
-  // Añadir elementos al <li>
+  // Añadir botones al <li>
   newAgenda.appendChild(checked);
-  newAgenda.appendChild(textoTarea);
-  newAgenda.appendChild(deleted);
+  // Añadir la tarea al <li>
+  newAgenda.appendChild(taskText);
   newAgenda.appendChild(edit);
+  newAgenda.appendChild(deleted);
 
-  // Agregar tarea a la lista
+  // Agregar la tarea a la lista
   agendaLista.appendChild(newAgenda);
 
-  // Guardar en localStorage
-  almacenamientoLocal(agendaEntrada.value);
+  // Forzar la recalificación de estilos
+  window.getComputedStyle(newAgenda);
 
-  // Limpiar entrada
+  // Almacenaje local para persistencia
+  almacenamientoLocal(agendaEntrada.value);
   agendaEntrada.value = "";
 }
 
