@@ -106,9 +106,29 @@ function editarTarea(tarea) {
 
     // Crear los botones para la tarea
     const checked = document.createElement("button");
-    checked.innerHTML = '<i class="fas fa-check"></i>';
     checked.classList.add("check-btn");
-    checked.addEventListener("click", () => tarea.classList.toggle("completed"));
+    // Revisar si la tarea está completada para determinar qué ícono mostrar
+    if (tarea.classList.contains("completed")) {
+      checked.innerHTML = '<i class="fa-solid fa-check-square"></i>';
+    } else {
+      checked.innerHTML = '<i class="fa-regular fa-square"></i>';
+    }
+
+    // Asociar el evento de check con la tarea
+    checked.addEventListener("click", () => {
+      tarea.classList.toggle("completed");
+
+      // Cambiar el ícono del check según el estado de completado
+      if (tarea.classList.contains("completed")) {
+        checked.innerHTML = '<i class="fa-solid fa-check-square"></i>';
+      } else {
+        checked.innerHTML = '<i class="fa-regular fa-square"></i>';
+      }
+
+      // Actualizar el estado de la tarea en LocalStorage
+      const estadoCompletado = tarea.classList.contains("completed");
+      actualizarEstadoLocalStorage(nuevoTexto, estadoCompletado);  // Actualizar estado de la tarea
+    });
 
     const deleted = document.createElement("button");
     deleted.innerHTML = '<i class="fas fa-trash"></i>';
